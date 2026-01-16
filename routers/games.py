@@ -1,24 +1,14 @@
-from time import sleep
-
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
+from utils.basiclogging import log_message
+
 router = Router()
 dice_success_message = 'Вы выиграли!'
 dice_failure_message = 'Вы проиграли!'
-"""
-64
-43
-1
-
-2 лимона - 27 35 39 42 44 47 59
-2 винограда - 6 18 21 23 24 26 30 38 54
-2 BAR - 2 3 4 13 49
-2 семерки - 16 32 48 52 56 60 61 62 63
-"""
 roulette_values = { # от 1 до 64 
     64: 50, # 64 - три семерки
     43: 40, # 43 - три лимона
@@ -36,12 +26,16 @@ class RouletteStates(StatesGroup):
 
 @router.message(Command(commands=['roulette']))
 async def roulette(message: Message, state: FSMContext):
+    log_message(message)
+    
     await state.clear()
     await state.set_state(RouletteStates.confirm)
     await message.answer(text='Коэффициенты:\nТри семерки - х 50\nТри лимона - х 40\nТри винограда - х 30\nТри BAR - х 20\n\nНапишите размер ставки')
 
 @router.message(RouletteStates.confirm)
 async def check_roulette(message: Message, state: FSMContext):
+    log_message(message)
+    
     bet = 0
     total = 0
     if not message.text or not message.text.isdigit():
@@ -63,6 +57,8 @@ async def check_roulette(message: Message, state: FSMContext):
 
 @router.message(Command(commands=['dice']))
 async def dice(message: Message, state: FSMContext):
+    log_message(message)
+    
     await state.clear()
     await state.set_state(DiceStates.ask)
     await message.answer('Кидают 2 кости, четное число выпадет на костях или нечетное?\n\nчет - четное\nнечет - нечетное')
@@ -70,6 +66,8 @@ async def dice(message: Message, state: FSMContext):
 
 @router.message(DiceStates.ask)
 async def check_dice(message: Message, state: FSMContext):
+    log_message(message)
+    
     if message.text and message.text.lower().startswith(('нечет', 'нечёт', 'чет', 'чёт')):
         is_odd = message.text.startswith(('нечет', 'нечёт'))
         result1 = await message.answer_dice()

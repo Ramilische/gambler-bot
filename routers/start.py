@@ -1,16 +1,21 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.filters import Command
-from aiogram.types import Message, InlineKeyboardButton, CallbackQuery, User
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message
+
+from utils.basiclogging import log_message
 
 router = Router()
 start_message = """
 Привет, я телеграм бот, посвященный азартным играм
 
-Здесь можно узнать об этих играх и попробовать поиграть на виртуальной валюте без риска"""
+Здесь можно узнать об этих играх и попробовать поиграть на виртуальной валюте без риска. Валюта пока не реализована
+
+/roulette - рулетка
+/dice - кости
+"""
 
 @router.message(Command(commands=['start']))
 async def start(message: Message):
+    log_message(message)
+    
     await message.answer(start_message)
