@@ -8,5 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# User
+logs/
 .env/
 test.py
