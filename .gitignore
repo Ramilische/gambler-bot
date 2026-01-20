@@ -10,6 +10,6 @@ wheels/
 .venv
 
 # User
-logs/
+logs
 .env/
 test.py
